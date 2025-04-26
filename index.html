@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VinF Hybrid Inference Bug Bash</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+
+    <h1>VinF - Hybrid Inference - Bug Bash</h1>
+
+    <br/><br/>
+
+    <h2>Text Only Input</h2>
+    <div>
+        <label for="textOnlyInputField">Prompt</label>
+        <input type="text" id="textOnlyInputField">
+    </div>
+
+    <div>
+        <button id="bTextOnlyInference">Do Text Inference</button>
+    </div>
+
+    <div>
+        <label for="textOnlyOutputArea">Output:</label>
+        <textarea id="textOnlyOutputArea" readonly></textarea>
+    </div>
+
+    <div>
+        <p id="textOnlytimeLabel">Time Taken ... ?</p>
+        <p id="textOnlyWordCount">Word Count ... ?</p>
+        <p id="textOnlyWordsPerSecond">Words per second ... ?</p>
+    </div>
+    
+
+    <br/><br/><br/><br/>
+
+    <h2>Text & Image Input</h2>
+    <p> Choose Image </p>
+    <input type="file" id="imageFile" name="imageFile" accept="image/*" />
+    <div>
+        <label for="textAndImageInputField">Prompt</label>
+        <input type="text" id="textAndImageInputField">
+    </div>
+
+    <div>
+        <button id="bTextAndImageInference">Do Text and Image Inference</button>
+    </div>
+
+    <div>
+        <label for="textAndImageOutputArea">Output:</label>
+        <textarea id="textAndImageOutputArea" readonly></textarea>
+    </div>
+
+    <div>
+        <p id="textAndImageTimeLabel">Time Taken ... ?</p>
+        <p id="textAndImageWordCount">Word Count ... ?</p>
+        <p id="textAndImageWordsPerSecond">Words per second ... ?</p>
+    </div>
+
+    <script type="module" src="dist/app.js" defer ></script>
+
+</body>
+</html>

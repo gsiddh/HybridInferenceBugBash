@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+      /* Base Options: */
+      "target": "ESNext",            // Target modern JavaScript version
+      "module": "ESNext",               // Use modern module system (optional for this simple case)
+      "outDir": "./dist",            // Where to output compiled JS files
+      "rootDir": "./src",            // Where to find TS source files
+      "sourceMap": true,             // Generate source maps for debugging
+  
+      /* Strictness */
+      "strict": true,                // Enable all strict type-checking options
+      "noImplicitAny": true,         // Error on expressions and declarations with an implied 'any' type.
+  
+      /* Module Resolution Options: */
+      "moduleResolution": "Bundler",    // How modules get resolved (important if you add external libs)
+      "esModuleInterop": true,       // Enables compatibility with Babel-style imports
+
+      // "noEmit": true, // IMPORTANT: Let Vite (or other bundler) handle JS emission, tsc only type checks
+
+  
+      /* Advanced Options */
+      "skipLibCheck": true,          // Skip type checking of declaration files
+      "forceConsistentCasingInFileNames": true // Disallow inconsistently-cased references to the same file.
+    },
+    "include": ["src/**/*"],        // Which files to compile
+    "exclude": ["node_modules"]     // Which files/folders to ignore
+  }
