@@ -23,6 +23,14 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+// Initialize the Vertex AI service
+const vertexAI = getVertexAI(app);
+
+// Instantiate a Firebase Generative Model object with Vertex AI backend
+// Default cloud model: gemini-2.0-flash-lite-001
+const vertexAiHybridModel = getGenerativeModel(vertexAI, {
+    mode: 'prefer_on_device',
+});
 
 // TEST: Try different modes:
 // 
@@ -35,14 +43,14 @@ const app = initializeApp(firebaseConfig);
 // 'ony_in_cloud':     Does in-cloud inference only. No on-device inference, even if 
 //                     available.
 
-// Initialize the Vertex AI service
-const vertexAI = getVertexAI(app);
 
-// Instantiate a Firebase Generative Model object with Vertex AI backend
-const vertexAiHybridModel = getGenerativeModel(vertexAI, {
-    mode: 'prefer_on_device',
-});
-
+// TEST: Try different cloud models. Supported models: http://shortn/_OZTOSktZze.
+// const vertexAiHybridModel = getGenerativeModel(vertexAI, {
+//     mode: 'prefer_on_device',
+//     inCloudParams: {
+//         model: 'gemini-2.0-flash-001',
+//     }
+// });
 
 // Initialize the Google AI (a.k.a. Developer API) service
 const googleAI = getAI(app);
