@@ -10,7 +10,6 @@ import {
 import { initializeApp } from "firebase/app";
 
 
-// TODO: Pick any project at random from here (http://shortn/_zwwmJwAewX), and add the provided config.
 const firebaseConfig = {
     apiKey: "*",
     authDomain: "vertexaiinfirebase-test.firebaseapp.com",
