@@ -3,8 +3,10 @@ import {
     getVertexAI,
     getGenerativeModel,
     GenerativeModel,
-    GenerateContentRequest
-} from "firebase/vertexai";
+    GenerateContentRequest,
+    VertexAIBackend,
+    GoogleAIBackend
+} from "firebase/ai";
 
 
 import { initializeApp } from "firebase/app";
@@ -23,7 +25,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Initialize the Vertex AI service
-const vertexAI = getVertexAI(app);
+// const vertexAI = getVertexAI(app);
+const vertexAI = getAI(app, { backend: new VertexAIBackend() });
 
 // Instantiate a Firebase Generative Model object with Vertex AI backend
 // Default cloud model: gemini-2.0-flash-lite-001
@@ -52,7 +55,7 @@ const vertexAiHybridModel = getGenerativeModel(vertexAI, {
 // });
 
 // Initialize the Google AI (a.k.a. Developer API) service
-const googleAI = getAI(app);
+const googleAI = getAI(app, { backend: new GoogleAIBackend() });
 
 // Instantiate a Firebase Generative Model object with Google AI backend
 const googleAiHybridModel = getGenerativeModel(googleAI, {
@@ -65,7 +68,7 @@ async function doTextOnlyInference(prompt: string, outputField: HTMLInputElement
     console.log("inference running for: ", prompt);
 
     // TEST: Try with vertexAiHybridModel and googleAiHybridModel
-    const inferenceRes = await vertexAiHybridModel.generateContentStream(prompt);
+    const inferenceRes = await googleAiHybridModel.generateContentStream(prompt);
 
     for await (const chunk of inferenceRes.stream) {
         outputField.value += chunk.text();
@@ -75,7 +78,7 @@ async function doTextOnlyInference(prompt: string, outputField: HTMLInputElement
     
 
     // TEST: Try with non-streaming inference using this code
-    // const inferenceRes = await vertexAiHybridModel.generateContent(txt);
+    // const inferenceRes = await googleAiHybridModel.generateContent(prompt);
     // const outputLen = inferenceRes.response.text().length;
     // outputField.value = inferenceRes.response.text();
     // outputField.scrollTop = outputField.scrollHeight;
@@ -92,7 +95,7 @@ async function doTextAndImageInference(prompt: string, imageFile: Blob, outputFi
     const request = { contents: [{ role: 'user', parts: [{ text: prompt }, inlineImageData] }] } as GenerateContentRequest
 
     // TEST: Try with vertexAiHybridModel and googleAiHybridModel
-    const inferenceRes = await vertexAiHybridModel.generateContentStream(request);
+    const inferenceRes = await googleAiHybridModel.generateContentStream(request);
     
     for await (const chunk of inferenceRes.stream) {
         outputField.value += chunk.text();
@@ -101,7 +104,7 @@ async function doTextAndImageInference(prompt: string, imageFile: Blob, outputFi
     const outputLen = outputField.value.length;
 
     // TEST: Try with non-streaming inference using this code
-    // const inferenceRes = await vertexAiHybridModel.generateContent(request);
+    // const inferenceRes = await googleAiHybridModel.generateContent(request);
     // const outputLen = inferenceRes.response.text().length;
     // outputField.value = inferenceRes.response.text();
     // outputField.scrollTop = outputField.scrollHeight;
