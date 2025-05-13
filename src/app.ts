@@ -1,8 +1,6 @@
 import {
     getAI,
-    getVertexAI,
     getGenerativeModel,
-    GenerativeModel,
     GenerateContentRequest,
     VertexAIBackend,
     GoogleAIBackend
