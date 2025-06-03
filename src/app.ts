@@ -7,6 +7,7 @@ import {
 } from "firebase/vertexai";
 
 
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { initializeApp } from "firebase/app";
 
 
@@ -204,6 +205,42 @@ async function fileToGenerativePart(file: Blob) {
 
 // --- Event Listener Setup ---
 document.addEventListener('DOMContentLoaded', () => {
+    // Add Firebase Messaging setup
+    const messaging = getMessaging();
+
+    // Request permission and get token
+    Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+            console.log('Notification permission granted.');
+            // Get registration token. Initially this makes a network call.
+            // If the token is already cached it's retrieved from cache.
+            getToken(messaging, { vapidKey: '<YOUR_VAPID_KEY>' }).then((currentToken) => {
+                if (currentToken) {
+                    // Send the token to your server and update the UI if necessary
+                    console.log('FCM token:', currentToken);
+                    // You can now send this token to your backend to send notifications
+                } else {
+                    // Show permission request UI
+                    console.log('No registration token available. Request permission to generate one.');
+                    // TODO: Display some UI to the user to request permission to receive notifications.
+                }
+            }).catch((err) => {
+                console.log('An error occurred while retrieving token. ', err);
+                // TODO: Handle error.
+            });
+        } else {
+            console.log('Unable to get permission to notify.');
+        }
+    });
+
+    // Handle incoming messages
+    onMessage(messaging, (payload) => {
+        console.log('Message received. ', payload);
+        // Customize notification here
+        const notificationTitle = payload.notification?.title;
+        const notificationOptions = { body: payload.notification?.body, icon: '/firebase-logo.png' };
+        new Notification(notificationTitle || 'New Message', notificationOptions);
+    });
     const bTextOnlyInference = document.getElementById('bTextOnlyInference') as HTMLButtonElement;
     const bTextAndImageInference = document.getElementById('bTextAndImageInference') as HTMLButtonElement;
 
