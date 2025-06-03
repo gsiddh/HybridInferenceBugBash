@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Notification permission granted.');
             // Get registration token. Initially this makes a network call.
             // If the token is already cached it's retrieved from cache.
-            getToken(messaging, { vapidKey: '<YOUR_VAPID_KEY>' }).then((currentToken) => {
+            getToken(messaging, { vapidKey: 'BH2rCQkMjwmOTRH9jkjykkmx5xUx25cDweLmL6cTlbJznP_nxtivrycwO4ltmlX3TyiHQjGGjJtZJqADYefGtPE' }).then((currentToken) => {
                 if (currentToken) {
                     // Send the token to your server and update the UI if necessary
                     console.log('FCM token:', currentToken);
