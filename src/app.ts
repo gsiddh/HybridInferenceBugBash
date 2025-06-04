@@ -8,19 +8,48 @@ import {
 
 
 import { initializeApp } from "firebase/app";
-
+import { getMessaging, getToken } from "firebase/messaging";
 
 const firebaseConfig = {
-    apiKey: "*",
-    authDomain: "vertexaiinfirebase-test.firebaseapp.com",
-    projectId: "vertexaiinfirebase-test",
-    storageBucket: "vertexaiinfirebase-test.firebasestorage.app",
-    messagingSenderId: "857620473716",
-    appId: "1:857620473716:web:8c803ada68ede9b2bb6e21"
-};
+    apiKey: "AIzaSyD37s0ZJeXjVUQRhGlO1cKgmGwk0GvbF00",
+    authDomain: "mess-auto.firebaseapp.com",
+    projectId: "mess-auto",
+    storageBucket: "mess-auto.firebasestorage.app",
+    messagingSenderId: "324484105269",
+    appId: "1:324484105269:web:24f6ce7ea1428397f1dd7c",
+    measurementId: "G-10W3S7SNZ4"
+  };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase Cloud Messaging and get a reference to the service
+const messaging = getMessaging(app);
+
+// Get registration token. Initially this makes a network call, once retrieved
+// subsequent calls to getToken will return from cache.
+async function requestPermissionAndGetToken() {
+    try {
+        const currentToken = await getToken(messaging, {
+            vapidKey: "BH2rCQkMjwmOTRH9jkjykkmx5xUx25cDweLmL6cTlbJznP_nxtivrycwO4ltmlX3TyiHQjGGjJtZJqADYefGtPE", // Replace with your VAPID key
+        });
+        if (currentToken) {
+            console.log("FCM Token:", currentToken);
+            // Send this token to your server (optional)
+        } else {
+            // Show permission request UI
+            console.log('No registration token available. Request permission to generate one.');
+            // ... (implement your own UI logic for requesting permission)
+        }
+    } catch (err) {
+        console.log('An error occurred while retrieving token. ', err);
+    }
+}
+
+// Call this function when you want to request permission and get the token
+// For example, on a button click or after the user logs in
+// requestPermissionAndGetToken();
+
 
 // Initialize the Vertex AI service
 // const vertexAI = getVertexAI(app);
@@ -66,7 +95,7 @@ async function doTextOnlyInference(prompt: string, outputField: HTMLInputElement
     console.log("inference running for: ", prompt);
 
     // TEST: Try with vertexAiHybridModel and googleAiHybridModel
-    const inferenceRes = await googleAiHybridModel.generateContentStream(prompt);
+    const inferenceRes = await vertexAiHybridModel.generateContentStream(prompt);
 
     for await (const chunk of inferenceRes.stream) {
         outputField.value += chunk.text();
@@ -93,7 +122,7 @@ async function doTextAndImageInference(prompt: string, imageFile: Blob, outputFi
     const request = { contents: [{ role: 'user', parts: [{ text: prompt }, inlineImageData] }] } as GenerateContentRequest
 
     // TEST: Try with vertexAiHybridModel and googleAiHybridModel
-    const inferenceRes = await googleAiHybridModel.generateContentStream(request);
+    const inferenceRes = await vertexAiHybridModel.generateContentStream(request);
     
     for await (const chunk of inferenceRes.stream) {
         outputField.value += chunk.text();
@@ -214,4 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bTextAndImageInference.addEventListener('click', () => {
         textAndImageInference();
     });
+
+    // Request permission and get token for FCM
+    requestPermissionAndGetToken();
 });
