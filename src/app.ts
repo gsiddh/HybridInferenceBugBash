@@ -8,6 +8,7 @@ import {
 
 
 import { initializeApp } from "firebase/app";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 
 const firebaseConfig = {
@@ -21,6 +22,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const messaging = getMessaging(app);
 
 // Initialize the Vertex AI service
 // const vertexAI = getVertexAI(app);
@@ -203,7 +205,53 @@ async function fileToGenerativePart(file: Blob) {
 
 
 // --- Event Listener Setup ---
+
+async function requestNotificationPermissionAndToken() {
+    console.log("Requesting notification permission...");
+    try {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+            console.log("Notification permission granted.");
+            // TODO: Replace 'YOUR_VAPID_KEY' with your actual VAPID key from the Firebase console.
+            // You will need to generate this key in the Firebase console under Project settings > Cloud Messaging > Web configuration.
+            const currentToken = await getToken(messaging, { vapidKey: "YOUR_VAPID_KEY_REPLACE_ME" });
+            if (currentToken) {
+                console.log("FCM Token:", currentToken);
+                // You would typically send this token to your server to store it.
+                // For display in this example, let's add it to a DOM element if it exists.
+                const tokenElement = document.getElementById('fcmToken');
+                if (tokenElement) {
+                    tokenElement.textContent = `FCM Token: ${currentToken}`;
+                }
+            } else {
+                console.log("No registration token available. Request permission to generate one.");
+            }
+        } else {
+            console.log("Unable to get permission to notify.");
+        }
+    } catch (error) {
+        console.error("An error occurred while requesting permission or getting token: ", error);
+    }
+}
+
+onMessage(messaging, (payload) => {
+    console.log("Message received in foreground: ", payload);
+    // Customize notification handling here.
+    // For example, show an alert or update the UI.
+    alert(`Foreground message received: ${payload.notification?.title || 'New Message'}`);
+
+    // You could also display this information in a dedicated part of your UI.
+    const notificationDisplay = document.getElementById('foregroundNotificationDisplay');
+    if (notificationDisplay) {
+        notificationDisplay.innerHTML +=
+            `<p><strong>${payload.notification?.title || 'Notification'}</strong>: ${payload.notification?.body || ''}</p>`;
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Request notification permission and get token right away
+    requestNotificationPermissionAndToken();
+
     const bTextOnlyInference = document.getElementById('bTextOnlyInference') as HTMLButtonElement;
     const bTextAndImageInference = document.getElementById('bTextAndImageInference') as HTMLButtonElement;
 
