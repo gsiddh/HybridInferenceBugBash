@@ -8,6 +8,7 @@ import {
 
 
 import { initializeApp } from "firebase/app";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 
 const firebaseConfig = {
@@ -21,6 +22,49 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+const messaging = getMessaging(app);
+
+// Handle incoming messages. Called when:
+// - App is running in foreground.
+// - Notification received from FCM service.
+onMessage(messaging, (payload) => {
+    console.log('Message received. ', payload);
+    // ...
+});
+
+
+function requestPermission() {
+    console.log('Requesting permission...');
+    Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+            console.log('Notification permission granted.');
+            // TODO(developer): Retrieve a registration token for use with FCM.
+            // In many cases once an app has been granted notification permission,
+            // it should update its UI reflecting this.
+            // Get registration token. Initially this makes a network call, once retrieved
+            // subsequent calls to getToken will return from cache.
+            getToken(messaging, { vapidKey: 'TODO: Add your VAPID key here' }).then((currentToken) => {
+                if (currentToken) {
+                    // Send the token to your server and update the UI if necessary
+                    // ...
+                    console.log("Got token: ", currentToken);
+                } else {
+                    // Show permission request UI
+                    console.log('No registration token available. Request permission to generate one.');
+                    // ...
+                }
+            }).catch((err) => {
+                console.log('An error occurred while retrieving token. ', err);
+                // ...
+            });
+        } else {
+            console.log('Unable to get permission to notify.');
+        }
+    });
+}
+
+(window as any).requestPermission = requestPermission;
 
 // Initialize the Vertex AI service
 // const vertexAI = getVertexAI(app);
