@@ -288,27 +288,6 @@ jobs:
           settings: |-
             {
               "maxSessionTurns": 50,
-              "coreTools": [
-                "run_shell_command(echo)",
-                "run_shell_command(gh pr view)",
-                "run_shell_command(gh pr diff)",
-                "run_shell_command(gh pr list)",
-                "run_shell_command(gh issue view)",
-                "run_shell_command(gh issue comment)",
-                "run_shell_command(gh issue list)",
-                "run_shell_command(gh pr comment)",
-                "run_shell_command(cat)",
-                "run_shell_command(head)",
-                "run_shell_command(tail)",
-                "run_shell_command(grep)",
-                "run_shell_command(git config)",
-                "run_shell_command(git status)",
-                "run_shell_command(git add)",
-                "run_shell_command(git commit)",
-                "run_shell_command(git push)",
-                "run_shell_command(git diff)",
-                "write_file"
-              ],
               "telemetry": {
                 "enabled": false,
                 "target": "gcp"

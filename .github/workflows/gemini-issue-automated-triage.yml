@@ -76,10 +76,6 @@ jobs:
           settings: |-
             {
               "maxSessionTurns": 25,
-              "coreTools": [
-                "run_shell_command(gh label list)",
-                "run_shell_command(gh issue edit)"
-              ],
               "telemetry": {
                 "enabled": false,
                 "target": "gcp"

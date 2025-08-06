@@ -184,15 +184,6 @@ jobs:
                   }
                 }
               },
-              "coreTools": [
-                "run_shell_command(echo)",
-                "run_shell_command(gh pr view)",
-                "run_shell_command(gh pr diff)",
-                "run_shell_command(cat)",
-                "run_shell_command(head)",
-                "run_shell_command(tail)",
-                "run_shell_command(grep)"
-              ],
               "telemetry": {
                 "enabled": false,
                 "target": "gcp"
